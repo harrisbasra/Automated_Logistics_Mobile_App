@@ -177,6 +177,8 @@ public class MainMenuuu extends AppCompatActivity {
         t1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //---------------------------------------- 0%
                 Intent i = new Intent(MainMenuuu.this, NewTransport.class);
                 startActivity(i);
             }
@@ -184,6 +186,8 @@ public class MainMenuuu extends AppCompatActivity {
         t2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //---------------------------------------- 100%
                 Intent i = new Intent(MainMenuuu.this, ViewVehicles.class);
                 startActivity(i);
             }
@@ -191,6 +195,8 @@ public class MainMenuuu extends AppCompatActivity {
         t3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //---------------------------------------- 100%
                 Intent i = new Intent(MainMenuuu.this, Addprogress.class);
                 startActivity(i);
             }
@@ -198,6 +204,8 @@ public class MainMenuuu extends AppCompatActivity {
         t4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //---------------------------------------- 100% (Check Integration)
                 Intent i = new Intent(MainMenuuu.this, ViewPetrol.class);
                 startActivity(i);
             }
@@ -205,6 +213,8 @@ public class MainMenuuu extends AppCompatActivity {
         t5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //---------------------------------------- 0%
                 Intent i = new Intent(MainMenuuu.this, BuyCars.class);
                 startActivity(i);
             }
@@ -212,6 +222,8 @@ public class MainMenuuu extends AppCompatActivity {
         t6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //---------------------------------------- 0%
                 Intent i = new Intent(MainMenuuu.this, BuyPetrol.class);
                 startActivity(i);
             }
@@ -219,6 +231,8 @@ public class MainMenuuu extends AppCompatActivity {
         t7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //---------------------------------------- 0%
                 Intent i = new Intent(MainMenuuu.this, ManageWallet.class);
                 startActivity(i);
             }
@@ -226,6 +240,8 @@ public class MainMenuuu extends AppCompatActivity {
         t8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //---------------------------------------- 0%
                 Intent i = new Intent(MainMenuuu.this, ViewFinancialReports.class);
                 startActivity(i);
             }
@@ -233,6 +249,8 @@ public class MainMenuuu extends AppCompatActivity {
         t9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //---------------------------------------- 100% (Check Validity With Data)
                 Intent i = new Intent(MainMenuuu.this, AdminControls.class);
                 startActivity(i);
             }
@@ -240,6 +258,8 @@ public class MainMenuuu extends AppCompatActivity {
         t10.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //---------------------------------------- 100% (Just Check)
                 Intent i = new Intent(MainMenuuu.this, SendSalary.class);
                 startActivity(i);
             }
