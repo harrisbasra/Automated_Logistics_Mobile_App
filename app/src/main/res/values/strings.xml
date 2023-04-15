@@ -16,4 +16,5 @@
     <string name="title_activity_view_financial_reports">ViewFinancialReports</string>
     <string name="title_activity_admin_controls">AdminControls</string>
     <string name="title_activity_send_salary">SendSalary</string>
+    <string name="Title">Title</string>
 </resources>
