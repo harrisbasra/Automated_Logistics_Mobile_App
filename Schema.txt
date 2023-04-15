@@ -1,0 +1,5 @@
+petrol.txt {Remaining \n Cars \n Trucks \n Bikes \n Ships}
+drivers.txt {Rounds|TimeStamp}
+vehicles.txt {Number|inttype|TimeStamp  \n  --}
+wallet.txt {Remaining}
+trips.txt {CarNumber|Size|Money|DriverName  \n  --}

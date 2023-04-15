@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "192522778287",
+    "project_id": "sdaapp-7dc34",
+    "storage_bucket": "sdaapp-7dc34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192522778287:android:f34244a66357135fc0065a",
+        "android_client_info": {
+          "package_name": "com.sda.fastlogistics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192522778287-floo4q9147tsmtrapsnlhh51ie45du9h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sda.fastlogistics",
+            "certificate_hash": "07184a3030ee1536ff81370094ec42985c44a01d"
+          }
+        },
+        {
+          "client_id": "192522778287-olqdagthgnh07cqbrdk00qkknfbgdmkh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvmTbXJYnE9r21qbjwTKBBjL1GzkkUA_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192522778287-olqdagthgnh07cqbrdk00qkknfbgdmkh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

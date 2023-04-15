@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">FAST Logistics</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_main_menuuu">MainMenuuu</string>
+    <string name="title_activity_addprogress">Addprogress</string>
+    <string name="Welcome">Welcome</string>
+    <string name="title_activity_add_string">AddString</string>
+    <string name="title_activity_view_reports">ViewReports</string>
+    <string name="title_activity_new_transport">NewTransport</string>
+    <string name="title_activity_view_vehicles">ViewVehicles</string>
+    <string name="title_activity_view_petrol">ViewPetrol</string>
+    <string name="title_activity_buy_cars">BuyCars</string>
+    <string name="title_activity_buy_petrol">BuyPetrol</string>
+    <string name="title_activity_manage_wallet">ManageWallet</string>
+    <string name="title_activity_view_financial_reports">ViewFinancialReports</string>
+    <string name="title_activity_admin_controls">AdminControls</string>
+    <string name="title_activity_send_salary">SendSalary</string>
+</resources>

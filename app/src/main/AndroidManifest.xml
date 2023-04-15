@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/dp"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.FASTLogistics"
+        tools:targetApi="31">
+        <activity
+            android:name=".SendSalary"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_send_salary"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".AdminControls"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_admin_controls"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".ViewFinancialReports"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_view_financial_reports"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".ManageWallet"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_manage_wallet"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".BuyPetrol"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_buy_petrol"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".BuyCars"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_buy_cars"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".ViewPetrol"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_view_petrol"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".ViewVehicles"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_view_vehicles"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".NewTransport"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_new_transport"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".ViewReports"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_view_reports"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".AddString"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_add_string"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".Addprogress"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_addprogress"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".MainMenuuu"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/title_activity_main_menuuu"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen" />
+        <activity
+            android:name=".FullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.FASTLogistics.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

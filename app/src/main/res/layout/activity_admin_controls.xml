@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_overlay"
+    android:theme="@style/ThemeOverlay.FASTLogistics.FullscreenContainer"
+    tools:context=".AdminControls">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="318dp"
+            android:layout_height="101dp"
+            android:background="@drawable/bothsidesroundb"
+            android:gravity="center"
+            android:text="Admin Controls"
+            android:textColor="#D5C5C5"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.078" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.174"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.249" />
+
+        <TextView
+            android:id="@+id/key_holder"
+            android:layout_width="303dp"
+            android:layout_height="57dp"
+            android:background="@drawable/buttonround"
+            android:clickable="false"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="none"
+            android:paddingHorizontal="10sp"
+            android:text=""
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="17sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.467" />
+
+        <Spinner
+            android:id="@+id/spinnerA"
+            android:layout_width="303dp"
+            android:layout_height="57dp"
+            android:background="@drawable/buttonround"
+            android:ems="10"
+            android:hapticFeedbackEnabled="true"
+            android:spinnerMode="dialog"
+            android:text="Name Of Country"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.371" />
+
+        <Button
+            android:id="@+id/button11"
+            android:layout_width="153dp"
+            android:layout_height="65dp"
+            android:background="@drawable/buttonround"
+            android:text="Approve"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.782" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
