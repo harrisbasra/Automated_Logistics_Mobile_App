@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +13,20 @@ import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.sda.fastlogistics.databinding.ActivityViewFinancialReportsBinding;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -103,6 +116,7 @@ public class ViewFinancialReports extends AppCompatActivity {
         }
     };
     private ActivityViewFinancialReportsBinding binding;
+    ArrayList barArraylist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,12 +137,135 @@ public class ViewFinancialReports extends AppCompatActivity {
             }
         });
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        binding.dummyButton.setOnTouchListener(mDelayHideTouchListener);
-    }
+        String Options[] = {"Petrol Buying", "Petrol In Cars", "Driver Trips", "Max Load", "Type Of Vehicle", "Driver Salary", "Driver Type"};
+        ArrayAdapter<String> roomType = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Options);
+        binding.spinner2.setAdapter(roomType);
+        BarChart barChart = findViewById(R.id.barchart);
+        getData();
+        BarDataSet barDataSet = new BarDataSet(barArraylist,"SDA");
+        BarData barData = new BarData(barDataSet);
+        barChart.setData(barData);
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        barDataSet.setValueTextColor(Color.BLACK);
+        barDataSet.setValueTextSize(16f);
+        barChart.getDescription().setEnabled(true);
+        binding.spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                BarChart barChart = findViewById(R.id.barchart);
+                getData();
+                BarDataSet barDataSet = new BarDataSet(barArraylist,"SDA");
+                BarData barData = new BarData(barDataSet);
+                barChart.setData(barData);
+                barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                barDataSet.setValueTextColor(Color.BLACK);
+                barDataSet.setValueTextSize(16f);
+                barChart.getDescription().setEnabled(true);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+    }
+    private void getData()
+    {
+
+        if(binding.spinner2.getSelectedItem().toString().equals("Petrol Buying")) {
+            barArraylist = new ArrayList();
+            String Petrol = "";
+            try {
+                FileInputStream fin = openFileInput("petrol.txt");
+                int a;
+                StringBuilder temp = new StringBuilder();
+                while ((a = fin.read()) != -1) {
+                    temp.append((char) a);
+                }
+                Petrol = temp.toString();
+                fin.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String[] parts = Petrol.split("\n");
+
+            String str1 = parts[0]; // "57"
+            String str2 = parts[1]; // "20"
+            String str3 = parts[2]; // "14"
+            String str4 = parts[3]; // "11"
+            String str5 = parts[4]; // "12"
+            barArraylist.add(new BarEntry(2f, Float.valueOf(str1), "Total"));
+            barArraylist.add(new BarEntry(3f, Float.valueOf(str2), "Car"));
+            barArraylist.add(new BarEntry(4f, Float.valueOf(str3), "Bike"));
+            barArraylist.add(new BarEntry(5f, Float.valueOf(str4), "Truck"));
+        }
+        else if(binding.spinner2.getSelectedItem().toString().equals("Petrol In Cars")){
+            barArraylist = new ArrayList();
+            VehicleDBHelper db = new VehicleDBHelper(this);
+            String Data[] = db.getPetrolQuantity();
+            barArraylist.add(new BarEntry(2f, Float.valueOf(Data[0]), "Total"));
+            barArraylist.add(new BarEntry(3f, Float.valueOf(Data[1]), "Total"));
+            barArraylist.add(new BarEntry(4f, Float.valueOf(Data[2]), "Total"));
+            barArraylist.add(new BarEntry(5f, Float.valueOf(Data[3]), "Total"));
+            barArraylist.add(new BarEntry(6f, Float.valueOf(Data[4]), "Total"));
+            barArraylist.add(new BarEntry(7f, Float.valueOf(Data[5]), "Total"));
+            barArraylist.add(new BarEntry(8f, Float.valueOf(Data[6]), "Total"));
+            barArraylist.add(new BarEntry(9f, Float.valueOf(Data[7]), "Total"));
+
+        }
+        else if(binding.spinner2.getSelectedItem().toString().equals("Max Load")){
+            barArraylist = new ArrayList();
+            VehicleDBHelper db = new VehicleDBHelper(this);
+            String Data[] = db.getMaxLoad();
+            barArraylist.add(new BarEntry(2f, Float.valueOf(Data[0]), "Total"));
+            barArraylist.add(new BarEntry(3f, Float.valueOf(Data[1]), "Total"));
+            barArraylist.add(new BarEntry(4f, Float.valueOf(Data[2]), "Total"));
+            barArraylist.add(new BarEntry(5f, Float.valueOf(Data[3]), "Total"));
+            barArraylist.add(new BarEntry(6f, Float.valueOf(Data[4]), "Total"));
+            barArraylist.add(new BarEntry(7f, Float.valueOf(Data[5]), "Total"));
+            barArraylist.add(new BarEntry(8f, Float.valueOf(Data[6]), "Total"));
+            barArraylist.add(new BarEntry(9f, Float.valueOf(Data[7]), "Total"));
+        }
+        else if(binding.spinner2.getSelectedItem().toString().equals("Driver Trips")){
+            barArraylist = new ArrayList();
+            DriverDBHelper db = new DriverDBHelper(this);
+            String Data[] = db.getTrips();
+            barArraylist.add(new BarEntry(2f, Float.valueOf(Data[0]), "Total"));
+            barArraylist.add(new BarEntry(3f, Float.valueOf(Data[1]), "Total"));
+            barArraylist.add(new BarEntry(4f, Float.valueOf(Data[2]), "Total"));
+            barArraylist.add(new BarEntry(5f, Float.valueOf(Data[3]), "Total"));
+        }
+        else if(binding.spinner2.getSelectedItem().toString().equals("Type Of Vehicle")){
+            barArraylist = new ArrayList();
+            VehicleDBHelper db = new VehicleDBHelper(this);
+            String Data[] = db.countVehicleTypes();
+            barArraylist.add(new BarEntry(2f, Float.valueOf(Data[0]), "Total"));
+            barArraylist.add(new BarEntry(3f, Float.valueOf(Data[1]), "Total"));
+            barArraylist.add(new BarEntry(4f, Float.valueOf(Data[2]), "Total"));
+            barArraylist.add(new BarEntry(5f, Float.valueOf(Data[3]), "Total"));
+        }
+        else if(binding.spinner2.getSelectedItem().toString().equals("Driver Salary")){
+            barArraylist = new ArrayList();
+            DriverDBHelper db = new DriverDBHelper(this);
+            String Data[] = db.getsalary();
+            barArraylist.add(new BarEntry(2f, Float.valueOf(Data[0]), "Total"));
+            barArraylist.add(new BarEntry(3f, Float.valueOf(Data[1]), "Total"));
+            barArraylist.add(new BarEntry(4f, Float.valueOf(Data[2]), "Total"));
+            barArraylist.add(new BarEntry(5f, Float.valueOf(Data[3]), "Total"));
+        }
+        else if(binding.spinner2.getSelectedItem().toString().equals("Driver Type")){
+            barArraylist = new ArrayList();
+            DriverDBHelper db = new DriverDBHelper(this);
+            String Data[] = db.countDriverType();
+            barArraylist.add(new BarEntry(2f, Float.valueOf(Data[0]), "Total"));
+            barArraylist.add(new BarEntry(3f, Float.valueOf(Data[1]), "Total"));
+            barArraylist.add(new BarEntry(4f, Float.valueOf(Data[2]), "Total"));
+            barArraylist.add(new BarEntry(5f, Float.valueOf(Data[3]), "Total"));
+        }
+
+    }
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);

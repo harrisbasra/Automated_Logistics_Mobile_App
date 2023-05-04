@@ -2,9 +2,14 @@ package com.sda.fastlogistics;
 
 import android.annotation.SuppressLint;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +17,13 @@ import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.sda.fastlogistics.databinding.ActivityNewTransportBinding;
 
 /**
@@ -96,8 +107,82 @@ public class NewTransport extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         mVisible = true;
+//        DriverDBHelper db2 = new DriverDBHelper(NewTransport.this);
+//        db2.addDriver("Driver1", 100, 0, "2023-02-01", "bike");
+//        db2.addDriver("Driver2", 90, 0, "2023-06-06", "bike");
+//        db2.addDriver("Driver3", 80, 0, "2023-02-01", "car");
+//        db2.addDriver("Driver4", 70, 0, "2023-06-06", "car");
+//        db2.addDriver("Driver5", 60, 0, "2023-02-01", "truck");
+//        db2.addDriver("Driver6", 50, 0, "2023-06-06", "truck");
 
 
+        ConstraintLayout frameLayout = findViewById(R.id.cl);
+
+        Glide.with(this)
+                .load("https://images.unsplash.com/photo-1537600612132-f04da4e02886?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=436&q=80")
+                .placeholder(R.color.teal_200) // Placeholder image until the image is loaded
+                .error(R.color.light_blue_600) // Error image if the image fails to load
+                .into(new CustomViewTarget<ConstraintLayout, Drawable>(frameLayout) {
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        Toast.makeText(NewTransport.this, "Load Failed", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        getView().setBackground(resource);
+                    }
+
+                    @Override
+                    protected void onResourceCleared(@Nullable Drawable placeholder) {
+                        // handle resource cleared
+                    }
+                });
+
+        VehicleDBHelper db1 = new VehicleDBHelper(this);
+        String Options[] = {"bike", "car", "truck"};
+        ArrayAdapter<String> roomType = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Options);
+        binding.spinnerA.setAdapter(roomType);
+
+        String Vehicles[] = db1.getFreeVehicles(binding.spinnerA.getSelectedItem().toString());
+        ArrayAdapter<String> veh = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Vehicles);
+        binding.spinnerB.setAdapter(veh);
+
+        binding.spinnerA.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String Vehicles[] = db1.getFreeVehicles(binding.spinnerA.getSelectedItem().toString());
+                ArrayAdapter<String> veh = new ArrayAdapter<String>(NewTransport.this, android.R.layout.simple_spinner_dropdown_item, Vehicles);
+                binding.spinnerB.setAdapter(veh);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        binding.button19.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!(binding.key2.getText().toString().equals("") && binding.key3.getText().toString().equals(""))){
+                    DriverDBHelper db2 = new DriverDBHelper(NewTransport.this);
+                    String DriverBeingUsed = db2.getAvailableDriverName(binding.spinnerA.getSelectedItem().toString());
+                    db2.incrementTripCount(DriverBeingUsed);
+                    db1.deductPetrol(binding.spinnerB.getSelectedItem().toString(), Integer.valueOf(binding.key3.getText().toString()));
+                    binding.key4.setText("Driver: "+DriverBeingUsed);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    startActivity(new Intent(NewTransport.this, MainMenuuu.class));
+                }
+                else{
+                    Toast.makeText(NewTransport.this, "Fill All Columns", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 

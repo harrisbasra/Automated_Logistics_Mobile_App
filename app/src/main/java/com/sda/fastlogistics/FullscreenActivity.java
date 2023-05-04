@@ -103,8 +103,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Intent i = new Intent(FullscreenActivity.this, ViewVehicles.class);
-        startActivity(i);
+
         super.onCreate(savedInstanceState);
 
         binding = ActivityFullscreenBinding.inflate(getLayoutInflater());

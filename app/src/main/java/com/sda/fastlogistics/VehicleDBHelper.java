@@ -1,10 +1,13 @@
 package com.sda.fastlogistics;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,38 +75,41 @@ public class VehicleDBHelper extends SQLiteOpenHelper {
 
     }
 
-    public List<String> getFreeVehicles() {
+    public String[] getFreeVehicles(String vehicleType) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<String> vehicleList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = sdf.format(new Date());
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_LAST_CONTRACT_END_DATE + " < ?";
-        Cursor cursor = db.rawQuery(query, new String[]{currentDate});
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_LAST_CONTRACT_END_DATE + " < ? AND " + COLUMN_TYPE + " = ? AND " + COLUMN_PETROL_QUANTITY + " > ?";
+        Cursor cursor = db.rawQuery(query, new String[]{currentDate, vehicleType, "1"});
         if (cursor.moveToFirst()) {
             do {
-                String vehicle = cursor.getString(1) + " (" + cursor.getString(2) + ")";
+                String vehicle = cursor.getString(1);
                 vehicleList.add(vehicle);
             } while (cursor.moveToNext());
         }
-
-        return vehicleList;
+        cursor.close();
+        return vehicleList.toArray(new String[vehicleList.size()]);
     }
 
-    public List<String> getVehiclesToRefill() {
+
+
+    public String[] getVehiclesToRefill(String vehicleType) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<String> vehicleList = new ArrayList<>();
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_PETROL_QUANTITY + " < ?";
-        Cursor cursor = db.rawQuery(query, new String[]{"5"});
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TYPE + " = ? AND " + COLUMN_PETROL_QUANTITY + " <= ?";
+        Cursor cursor = db.rawQuery(query, new String[]{vehicleType, "3"});
 
         if (cursor.moveToFirst()) {
             do {
-                String vehicle = cursor.getString(1) + " (" + cursor.getString(2) + ")";
+                String vehicle = cursor.getString(1) ;
                 vehicleList.add(vehicle);
             } while (cursor.moveToNext());
         }
 
-        return vehicleList;
+        return vehicleList.toArray(new String[0]);
     }
+
     public List<String> getAllVehicleInfo() {
         List<String> vehicleInfoList = new ArrayList<>();
 
@@ -127,5 +133,95 @@ public class VehicleDBHelper extends SQLiteOpenHelper {
         // Return the list of vehicle info strings
         return vehicleInfoList;
     }
+    public void deductPetrol(String vehicleName, int petrolQuantity) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_NAME + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{vehicleName});
+
+        if (cursor.moveToFirst()) {
+            int petrol = cursor.getInt(2);
+            if (petrol >= petrolQuantity) {
+                values.put(COLUMN_PETROL_QUANTITY, petrol - petrolQuantity);
+                db.update(TABLE_NAME, values, COLUMN_NAME + " = ?", new String[]{vehicleName});
+            } else {
+                // Handle insufficient petrol
+                Log.e(TAG, "Insufficient petrol for " + vehicleName);
+            }
+        }
+        cursor.close();
+        db.close();
+    }
+
+    public void updatePetrolQuantity(String vehicleName, int petrolQuantity) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PETROL_QUANTITY, petrolQuantity);
+        db.update(TABLE_NAME, values, COLUMN_NAME + " = ?", new String[] { vehicleName });
+        db.close();
+    }
+
+    public String[] getPetrolQuantity() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> petrolList = new ArrayList<>();
+        String query = "SELECT " + COLUMN_PETROL_QUANTITY + " FROM " + TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String petrol = cursor.getString(cursor.getColumnIndex(COLUMN_PETROL_QUANTITY));
+                petrolList.add(petrol);
+            } while (cursor.moveToNext());
+        }
+
+        String[] petrolArray = petrolList.toArray(new String[petrolList.size()]);
+        return petrolArray;
+    }
+
+    public String[] getMaxLoad() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> petrolList = new ArrayList<>();
+        String query = "SELECT " + COLUMN_MAX_LOAD + " FROM " + TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String petrol = cursor.getString(cursor.getColumnIndex(COLUMN_MAX_LOAD));
+                petrolList.add(petrol);
+            } while (cursor.moveToNext());
+        }
+
+        String[] petrolArray = petrolList.toArray(new String[petrolList.size()]);
+        return petrolArray;
+    }
+
+    public String[] countVehicleTypes() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        int totalVehicles = cursor.getInt(0);
+
+        query = "SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE " + COLUMN_TYPE + " = ?";
+        cursor = db.rawQuery(query, new String[]{"car"});
+        cursor.moveToFirst();
+        int numCars = cursor.getInt(0);
+
+        cursor = db.rawQuery(query, new String[]{"bike"});
+        cursor.moveToFirst();
+        int numBikes = cursor.getInt(0);
+
+        cursor = db.rawQuery(query, new String[]{"truck"});
+        cursor.moveToFirst();
+        int numTrucks = cursor.getInt(0);
+
+        String[] result = new String[4];
+        result[0] = String.valueOf(totalVehicles);
+        result[1] = String.valueOf(numCars);
+        result[2] = String.valueOf(numBikes);
+        result[3] = String.valueOf(numTrucks);
+        return result;
+    }
+
 
 }

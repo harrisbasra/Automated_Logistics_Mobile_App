@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,8 @@ import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.sda.fastlogistics.databinding.ActivityBuyCarsBinding;
 
@@ -38,29 +41,15 @@ public class BuyCars extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler(Looper.myLooper());
-    private View mContentView;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
         public void run() {
-            // Delayed removal of status and navigation bar
-            if (Build.VERSION.SDK_INT >= 30) {
-                mContentView.getWindowInsetsController().hide(
-                        WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-            } else {
-                // Note that some of these constants are new as of API 16 (Jelly Bean)
-                // and API 19 (KitKat). It is safe to use them, as they are inlined
-                // at compile-time and do nothing on earlier devices.
-                mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-            }
+
         }
     };
-    private View mControlsView;
+
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -69,7 +58,6 @@ public class BuyCars extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.show();
             }
-            mControlsView.setVisibility(View.VISIBLE);
         }
     };
     private boolean mVisible;
@@ -112,21 +100,30 @@ public class BuyCars extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         mVisible = true;
-        mControlsView = binding.fullscreenContentControls;
-        mContentView = binding.fullscreenContent;
 
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
+        String Options[] = {"bike", "car", "truck"};
+        ArrayAdapter<String> roomType = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Options);
+        binding.spinnerA.setAdapter(roomType);
+
+
+        binding.button19.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                toggle();
+            public void onClick(View v) {
+                if(!(binding.spinnerB.getText().equals("") && binding.key2.getText().equals("") && binding.key3.getText().equals(""))){
+                    VehicleDBHelper db = new VehicleDBHelper(BuyCars.this);
+                    String VehicleName = binding.spinnerB.getText().toString();
+                    String VehicleNum = binding.key2.getText().toString();
+                    String PetrolQuantity = binding.key3.getText().toString();
+                    String LoadQuantity = binding.key4.getText().toString();
+                    db.addVehicle(VehicleName, VehicleNum, PetrolQuantity, LoadQuantity, "2000-01-01", "2000-01-02", binding.spinnerA.getSelectedItem().toString());
+                    Toast.makeText(BuyCars.this, "Bought Successfully", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(BuyCars.this, MainMenuuu.class));
+                }
+                else{
+                    Toast.makeText(BuyCars.this, "Fill All Fields", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        binding.dummyButton.setOnTouchListener(mDelayHideTouchListener);
     }
 
     @Override
@@ -153,7 +150,6 @@ public class BuyCars extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-        mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
@@ -162,14 +158,6 @@ public class BuyCars extends AppCompatActivity {
     }
 
     private void show() {
-        // Show the system bar
-        if (Build.VERSION.SDK_INT >= 30) {
-            mContentView.getWindowInsetsController().show(
-                    WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-        } else {
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        }
         mVisible = true;
 
         // Schedule a runnable to display UI elements after a delay

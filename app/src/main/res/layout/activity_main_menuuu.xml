@@ -193,7 +193,7 @@
             android:layout_height="59dp"
             android:background="@drawable/buttonround2"
             android:gravity="center"
-            android:text="Manage Wallet"
+            android:text="View Leaves"
             android:textSize="19sp"
             android:textStyle="bold"
             android:visibility="visible"

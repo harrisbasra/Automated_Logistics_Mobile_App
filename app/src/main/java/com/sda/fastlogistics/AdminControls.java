@@ -6,13 +6,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowInsets;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -158,7 +156,7 @@ public class AdminControls extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedLogin = parent.getItemAtPosition(position).toString();
                 String password = getPassword(selectedLogin);
-                TextView keyHolder = findViewById(R.id.key_holder);
+                TextView keyHolder = findViewById(R.id.spinnerB);
                 keyHolder.setText(password);
             }
 

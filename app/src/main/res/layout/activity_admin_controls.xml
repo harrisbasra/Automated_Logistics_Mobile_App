@@ -46,7 +46,7 @@
             app:layout_constraintVertical_bias="0.249" />
 
         <TextView
-            android:id="@+id/key_holder"
+            android:id="@+id/spinnerB"
             android:layout_width="303dp"
             android:layout_height="57dp"
             android:background="@drawable/buttonround"

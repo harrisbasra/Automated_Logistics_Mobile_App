@@ -123,7 +123,7 @@ public class ViewPetrol extends AppCompatActivity {
         binding.textView5.setText("Trucks:                $"+str3);
         binding.textView4.setText("Bikes:                $"+str4);
         binding.textView6.setText("Ships:                $"+str5);
-        binding.textView10.setText("Ships:                $"+str1);
+        binding.textView10.setText("Total:                $"+str1);
 
     }
 

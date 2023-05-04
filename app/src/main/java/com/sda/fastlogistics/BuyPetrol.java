@@ -7,6 +7,8 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +17,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
@@ -24,6 +28,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sda.fastlogistics.databinding.ActivityBuyPetrolBinding;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -48,29 +56,15 @@ public class BuyPetrol extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler(Looper.myLooper());
-    private View mContentView;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
         public void run() {
-            // Delayed removal of status and navigation bar
-            if (Build.VERSION.SDK_INT >= 30) {
-                mContentView.getWindowInsetsController().hide(
-                        WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-            } else {
-                // Note that some of these constants are new as of API 16 (Jelly Bean)
-                // and API 19 (KitKat). It is safe to use them, as they are inlined
-                // at compile-time and do nothing on earlier devices.
-                mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-            }
+
         }
     };
-    private View mControlsView;
+
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -79,7 +73,7 @@ public class BuyPetrol extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.show();
             }
-            mControlsView.setVisibility(View.VISIBLE);
+
         }
     };
     private boolean mVisible;
@@ -89,11 +83,7 @@ public class BuyPetrol extends AppCompatActivity {
             hide();
         }
     };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
+
     private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -117,26 +107,120 @@ public class BuyPetrol extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityBuyPetrolBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         mVisible = true;
-        mControlsView = binding.fullscreenContentControls;
-        mContentView = binding.fullscreenContent;
 
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
+
+        VehicleDBHelper db = new VehicleDBHelper(this);
+
+//        db.addVehicle("Bike79","BK79","1","10","2000-01-01","2020-01-02","bike");
+//        db.addVehicle("Bike69","BK79","1","10","2000-01-01","2020-01-02","bike");
+//        db.addVehicle("Bike59","BK79","1","10","2000-01-01","2020-01-02","bike");
+//        db.addVehicle("Bike49","BK79","1","10","2000-01-01","2020-01-02","bike");
+
+        String Types[] = {"bike", "car", "truck"};
+        ArrayAdapter<String> roomType = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Types);
+        binding.spinnerA.setAdapter(roomType);
+
+        String Options[] = db.getFreeVehicles(binding.spinnerA.getSelectedItem().toString());
+        ArrayAdapter<String> veh = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Options);
+        binding.spinnerA4.setAdapter(veh);
+
+
+        binding.spinnerA.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                toggle();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String Options[] = db.getVehiclesToRefill(binding.spinnerA.getSelectedItem().toString());
+                ArrayAdapter<String> veh = new ArrayAdapter<String>(BuyPetrol.this, android.R.layout.simple_spinner_dropdown_item, Options);
+                binding.spinnerA4.setAdapter(veh);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        binding.button13.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.updatePetrolQuantity(binding.spinnerA4.getSelectedItem().toString(), Integer.valueOf(binding.keyHolder.getText().toString()));
+                Toast.makeText(BuyPetrol.this, "Vehicle Refilled!", Toast.LENGTH_SHORT).show();
+                String Options[] = db.getVehiclesToRefill(binding.spinnerA.getSelectedItem().toString());
+                ArrayAdapter<String> veh = new ArrayAdapter<String>(BuyPetrol.this, android.R.layout.simple_spinner_dropdown_item, Options);
+                binding.spinnerA4.setAdapter(veh);
+
+
+                String Petrol = "";
+                try {
+                    FileInputStream fin = openFileInput("petrol.txt");
+                    int a;
+                    StringBuilder temp = new StringBuilder();
+                    while ((a = fin.read()) != -1) {
+                        temp.append((char)a);
+                    }
+                    Petrol = temp.toString();
+                    fin.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String[] parts = Petrol.split("\n");
+
+                String str1 = parts[0];
+                String str2 = parts[1];
+                String str3 = parts[2];
+                String str4 = parts[3];
+                String str5 = parts[4];
+
+                if(binding.spinnerA.getSelectedItem().toString().equals("car")){
+                    if(!str2.equals("")){
+                        str2 = String.valueOf(Float.valueOf(str2)+Float.valueOf(binding.keyHolder2.getText().toString()));
+                    }
+                    else{
+                        str2 = String.valueOf(binding.keyHolder2.getText().toString());
+                    }
+                }
+                else  if(binding.spinnerA.getSelectedItem().toString().equals("bike")){
+                    if(!str4.equals("")){
+                        str4 = String.valueOf(Float.valueOf(str4)+Float.valueOf(binding.keyHolder2.getText().toString()));
+                    }
+                    else{
+                        str4 = String.valueOf(binding.keyHolder2.getText().toString());
+                    }
+                }
+                else  if(binding.spinnerA.getSelectedItem().toString().equals("truck")){
+                    if(!str3.equals("")){
+                        str3 = String.valueOf(Float.valueOf(str3)+Float.valueOf(binding.keyHolder2.getText().toString()));
+                    }
+                    else{
+                        str3 = String.valueOf(binding.keyHolder2.getText().toString());
+                    }
+                }
+
+                String TBR = str1+"\n"+str2+"\n"+str3+"\n"+str4+"\n"+str5;
+
+                FileOutputStream fos = null;
+                try {
+                    fos = openFileOutput("petrol.txt", Context.MODE_PRIVATE);
+                    fos.write(TBR.getBytes());
+                    fos.flush();
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
 
-
-
-
+        binding.button111234567890.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BuyPetrol.this, MainMenuuu.class));
+            }
+        });
 
 
     }
@@ -165,7 +249,6 @@ public class BuyPetrol extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-        mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
@@ -174,14 +257,7 @@ public class BuyPetrol extends AppCompatActivity {
     }
 
     private void show() {
-        // Show the system bar
-        if (Build.VERSION.SDK_INT >= 30) {
-            mContentView.getWindowInsetsController().show(
-                    WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-        } else {
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        }
+
         mVisible = true;
 
         // Schedule a runnable to display UI elements after a delay

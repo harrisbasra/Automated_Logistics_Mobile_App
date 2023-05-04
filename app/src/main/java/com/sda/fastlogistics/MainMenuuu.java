@@ -178,7 +178,7 @@ public class MainMenuuu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //---------------------------------------- 0%
+                //---------------------------------------- 100%
                 Intent i = new Intent(MainMenuuu.this, NewTransport.class);
                 startActivity(i);
             }
@@ -214,7 +214,7 @@ public class MainMenuuu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //---------------------------------------- 0%
+                //---------------------------------------- 100%
                 Intent i = new Intent(MainMenuuu.this, BuyCars.class);
                 startActivity(i);
             }
@@ -223,7 +223,7 @@ public class MainMenuuu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //---------------------------------------- 0%
+                //---------------------------------------- 100%
                 Intent i = new Intent(MainMenuuu.this, BuyPetrol.class);
                 startActivity(i);
             }
@@ -233,7 +233,7 @@ public class MainMenuuu extends AppCompatActivity {
             public void onClick(View view) {
 
                 //---------------------------------------- 0%
-                Intent i = new Intent(MainMenuuu.this, ManageWallet.class);
+                Intent i = new Intent(MainMenuuu.this, ViewReports.class);
                 startActivity(i);
             }
         });
@@ -250,7 +250,7 @@ public class MainMenuuu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //---------------------------------------- 100% (Check Validity With Data)
+                //---------------------------------------- 100%
                 Intent i = new Intent(MainMenuuu.this, AdminControls.class);
                 startActivity(i);
             }
