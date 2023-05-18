@@ -145,72 +145,75 @@ public class BuyPetrol extends AppCompatActivity {
         binding.button13.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.updatePetrolQuantity(binding.spinnerA4.getSelectedItem().toString(), Integer.valueOf(binding.keyHolder.getText().toString()));
-                Toast.makeText(BuyPetrol.this, "Vehicle Refilled!", Toast.LENGTH_SHORT).show();
-                String Options[] = db.getVehiclesToRefill(binding.spinnerA.getSelectedItem().toString());
-                ArrayAdapter<String> veh = new ArrayAdapter<String>(BuyPetrol.this, android.R.layout.simple_spinner_dropdown_item, Options);
-                binding.spinnerA4.setAdapter(veh);
+                if(!(binding.keyHolder.getText().toString().equals("")||binding.keyHolder2.getText().toString().equals(""))) {
+                    if(!(binding.keyHolder.getText().toString().startsWith("-")||binding.keyHolder2.getText().toString().startsWith("-"))) {
+                        db.updatePetrolQuantity(binding.spinnerA4.getSelectedItem().toString(), Integer.valueOf(binding.keyHolder.getText().toString()));
+                        Toast.makeText(BuyPetrol.this, "Vehicle Refilled!", Toast.LENGTH_SHORT).show();
+                        String Options[] = db.getVehiclesToRefill(binding.spinnerA.getSelectedItem().toString());
+                        ArrayAdapter<String> veh = new ArrayAdapter<String>(BuyPetrol.this, android.R.layout.simple_spinner_dropdown_item, Options);
+                        binding.spinnerA4.setAdapter(veh);
 
 
-                String Petrol = "";
-                try {
-                    FileInputStream fin = openFileInput("petrol.txt");
-                    int a;
-                    StringBuilder temp = new StringBuilder();
-                    while ((a = fin.read()) != -1) {
-                        temp.append((char)a);
-                    }
-                    Petrol = temp.toString();
-                    fin.close();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-                String[] parts = Petrol.split("\n");
+                        String Petrol = "";
+                        try {
+                            FileInputStream fin = openFileInput("petrol.txt");
+                            int a;
+                            StringBuilder temp = new StringBuilder();
+                            while ((a = fin.read()) != -1) {
+                                temp.append((char) a);
+                            }
+                            Petrol = temp.toString();
+                            fin.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        String[] parts = Petrol.split("\n");
 
-                String str1 = parts[0];
-                String str2 = parts[1];
-                String str3 = parts[2];
-                String str4 = parts[3];
-                String str5 = parts[4];
+                        String str1 = parts[0];
+                        String str2 = parts[1];
+                        String str3 = parts[2];
+                        String str4 = parts[3];
+                        String str5 = parts[4];
 
-                if(binding.spinnerA.getSelectedItem().toString().equals("car")){
-                    if(!str2.equals("")){
-                        str2 = String.valueOf(Float.valueOf(str2)+Float.valueOf(binding.keyHolder2.getText().toString()));
+                        if (binding.spinnerA.getSelectedItem().toString().equals("car")) {
+                            if (!str2.equals("")) {
+                                str2 = String.valueOf(Float.valueOf(str2) + Float.valueOf(binding.keyHolder2.getText().toString()));
+                            } else {
+                                str2 = String.valueOf(binding.keyHolder2.getText().toString());
+                            }
+                        } else if (binding.spinnerA.getSelectedItem().toString().equals("bike")) {
+                            if (!str4.equals("")) {
+                                str4 = String.valueOf(Float.valueOf(str4) + Float.valueOf(binding.keyHolder2.getText().toString()));
+                            } else {
+                                str4 = String.valueOf(binding.keyHolder2.getText().toString());
+                            }
+                        } else if (binding.spinnerA.getSelectedItem().toString().equals("truck")) {
+                            if (!str3.equals("")) {
+                                str3 = String.valueOf(Float.valueOf(str3) + Float.valueOf(binding.keyHolder2.getText().toString()));
+                            } else {
+                                str3 = String.valueOf(binding.keyHolder2.getText().toString());
+                            }
+                        }
+
+                        String TBR = str1 + "\n" + str2 + "\n" + str3 + "\n" + str4 + "\n" + str5;
+
+                        FileOutputStream fos = null;
+                        try {
+                            fos = openFileOutput("petrol.txt", Context.MODE_PRIVATE);
+                            fos.write(TBR.getBytes());
+                            fos.flush();
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                     else{
-                        str2 = String.valueOf(binding.keyHolder2.getText().toString());
+                        Toast.makeText(BuyPetrol.this, "Nothing Can Be Negative", Toast.LENGTH_SHORT).show();
                     }
                 }
-                else  if(binding.spinnerA.getSelectedItem().toString().equals("bike")){
-                    if(!str4.equals("")){
-                        str4 = String.valueOf(Float.valueOf(str4)+Float.valueOf(binding.keyHolder2.getText().toString()));
-                    }
-                    else{
-                        str4 = String.valueOf(binding.keyHolder2.getText().toString());
-                    }
+                else{
+                    Toast.makeText(BuyPetrol.this, "Empty Columns Found", Toast.LENGTH_SHORT).show();
                 }
-                else  if(binding.spinnerA.getSelectedItem().toString().equals("truck")){
-                    if(!str3.equals("")){
-                        str3 = String.valueOf(Float.valueOf(str3)+Float.valueOf(binding.keyHolder2.getText().toString()));
-                    }
-                    else{
-                        str3 = String.valueOf(binding.keyHolder2.getText().toString());
-                    }
-                }
-
-                String TBR = str1+"\n"+str2+"\n"+str3+"\n"+str4+"\n"+str5;
-
-                FileOutputStream fos = null;
-                try {
-                    fos = openFileOutput("petrol.txt", Context.MODE_PRIVATE);
-                    fos.write(TBR.getBytes());
-                    fos.flush();
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
             }
         });
 

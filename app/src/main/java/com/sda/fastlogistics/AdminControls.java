@@ -150,14 +150,15 @@ public class AdminControls extends AppCompatActivity {
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
-        // Display password in textview when username is selected from spinner
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedLogin = parent.getItemAtPosition(position).toString();
                 String password = getPassword(selectedLogin);
                 TextView keyHolder = findViewById(R.id.spinnerB);
-                keyHolder.setText(password);
+                keyHolder.setText(selectedLogin.replace("22", ""));
+                keyHolder.setText(selectedLogin.replace("|", " - "));
             }
 
             @Override

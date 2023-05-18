@@ -119,11 +119,11 @@ public class ViewPetrol extends AppCompatActivity {
         String str4 = parts[3]; // "11"
         String str5 = parts[4]; // "12"
 
-        binding.textView2.setText("Cars:                $"+str2);
-        binding.textView5.setText("Trucks:                $"+str3);
-        binding.textView4.setText("Bikes:                $"+str4);
-        binding.textView6.setText("Ships:                $"+str5);
-        binding.textView10.setText("Total:                $"+str1);
+        binding.textView2.setText("Cars:                PKR"+str2);
+        binding.textView5.setText("Trucks:                PKR"+str3);
+        binding.textView4.setText("Bikes:                PKR"+str4);
+        binding.textView6.setText("Ships:                PKR"+str5);
+        binding.textView10.setText("Total:                PKR"+str1);
 
     }
 

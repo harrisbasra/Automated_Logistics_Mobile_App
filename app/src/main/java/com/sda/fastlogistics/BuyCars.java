@@ -109,15 +109,20 @@ public class BuyCars extends AppCompatActivity {
         binding.button19.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!(binding.spinnerB.getText().equals("") && binding.key2.getText().equals("") && binding.key3.getText().equals(""))){
-                    VehicleDBHelper db = new VehicleDBHelper(BuyCars.this);
-                    String VehicleName = binding.spinnerB.getText().toString();
-                    String VehicleNum = binding.key2.getText().toString();
-                    String PetrolQuantity = binding.key3.getText().toString();
-                    String LoadQuantity = binding.key4.getText().toString();
-                    db.addVehicle(VehicleName, VehicleNum, PetrolQuantity, LoadQuantity, "2000-01-01", "2000-01-02", binding.spinnerA.getSelectedItem().toString());
-                    Toast.makeText(BuyCars.this, "Bought Successfully", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(BuyCars.this, MainMenuuu.class));
+                if(!(binding.spinnerB.getText().equals("") || binding.key2.getText().equals("") || binding.key3.getText().equals(""))){
+                    if(!(binding.key3.getText().toString().startsWith("-") || binding.key4.getText().toString().startsWith("-"))){
+                        VehicleDBHelper db = new VehicleDBHelper(BuyCars.this);
+                        String VehicleName = binding.spinnerB.getText().toString();
+                        String VehicleNum = binding.key2.getText().toString();
+                        String PetrolQuantity = binding.key3.getText().toString();
+                        String LoadQuantity = binding.key4.getText().toString();
+                        db.addVehicle(VehicleName, VehicleNum, PetrolQuantity, LoadQuantity, "2000-01-01", "2000-01-02", binding.spinnerA.getSelectedItem().toString());
+                        Toast.makeText(BuyCars.this, "Bought Successfully", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(BuyCars.this, MainMenuuu.class));
+                    }
+                    else{
+                        Toast.makeText(BuyCars.this, "Nothing Can be Negative", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else{
                     Toast.makeText(BuyCars.this, "Fill All Fields", Toast.LENGTH_SHORT).show();

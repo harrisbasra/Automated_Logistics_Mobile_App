@@ -11,6 +11,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.renderscript.ScriptGroup;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
@@ -135,6 +138,8 @@ public class FullscreenActivity extends AppCompatActivity {
                 NameEdit.setVisibility(View.VISIBLE);
                 EmailEdit.setVisibility(View.VISIBLE);
                 EmailEdit.setHint("Enter Password");
+                EmailEdit.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                EmailEdit.setTransformationMethod(new PasswordTransformationMethod());
                 PhoneNoEdit.setVisibility(View.GONE);
                 //          PassEdit.setVisibility(View.GONE);
 
@@ -215,45 +220,52 @@ public class FullscreenActivity extends AppCompatActivity {
                         }
                         else{
                             if(!(!r1.isChecked() && !r2.isChecked())){
-                                FileOutputStream fos = null;
-                                String PatchedInfo = "";
-                                if(r1.isChecked()){
-                                    PatchedInfo = "1"+NameEdit.getText().toString()+"|"+PhoneNoEdit.getText().toString();
-                                }
-                                else if(r2.isChecked()){
-                                    PatchedInfo = "22"+NameEdit.getText().toString()+"|"+PhoneNoEdit.getText().toString();
-                                }
-                                ////////////////////////////////////////////////////////////////////
-                                String Whole_Data = "";
-                                try {
-                                    FileInputStream fin = openFileInput("Login Info.txt");
-                                    int a;
-                                    StringBuilder temp = new StringBuilder();
-                                    while ((a = fin.read()) != -1) {
-                                        temp.append((char)a);
-                                    }
-                                    Whole_Data = temp.toString();
-                                    fin.close();
-                                }
-                                catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                if(Whole_Data==""){
+                                if(!(PhoneNoEdit.getText().toString().length() <=6)) {
+                                    if (EmailEdit.getText().toString().contains("@") && EmailEdit.getText().toString().contains(".com")) {
+                                        FileOutputStream fos = null;
+                                        String PatchedInfo = "";
+                                        if (r1.isChecked()) {
+                                            PatchedInfo = "1" + NameEdit.getText().toString() + "|" + PhoneNoEdit.getText().toString();
+                                        } else if (r2.isChecked()) {
+                                            PatchedInfo = "22" + NameEdit.getText().toString() + "|" + PhoneNoEdit.getText().toString();
+                                        }
+                                        ////////////////////////////////////////////////////////////////////
+                                        String Whole_Data = "";
+                                        try {
+                                            FileInputStream fin = openFileInput("Login Info.txt");
+                                            int a;
+                                            StringBuilder temp = new StringBuilder();
+                                            while ((a = fin.read()) != -1) {
+                                                temp.append((char) a);
+                                            }
+                                            Whole_Data = temp.toString();
+                                            fin.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        if (Whole_Data == "") {
 
+                                        } else {
+                                            PatchedInfo = Whole_Data + '\n' + PatchedInfo;
+                                        }
+                                        try {
+                                            fos = openFileOutput("Login Info.txt", Context.MODE_PRIVATE);
+                                            fos.write(PatchedInfo.getBytes());
+                                            fos.flush();
+                                            fos.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        Intent Restarter = new Intent(FullscreenActivity.this, FullscreenActivity.class);
+                                        startActivity(Restarter);
+                                    }
+                                    else{
+                                        Snackbar.make(view, "Enter A Valid Email Address", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                    }
                                 }
                                 else{
-                                    PatchedInfo = Whole_Data+'\n'+PatchedInfo;
+                                    Snackbar.make(view, "Password Be of Length Greater than or Equal to 6", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                 }
-                                try {
-                                    fos = openFileOutput("Login Info.txt", Context.MODE_PRIVATE);
-                                    fos.write(PatchedInfo.getBytes());
-                                    fos.flush();
-                                    fos.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                Intent Restarter = new Intent(FullscreenActivity.this, FullscreenActivity.class);
-                                startActivity(Restarter);
                             }
                             else{
                                 Snackbar.make(view, "Select Any One Role", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -271,9 +283,12 @@ public class FullscreenActivity extends AppCompatActivity {
                     B2.setVisibility(View.VISIBLE);
                     NameEdit.setVisibility(View.VISIBLE);
                     EmailEdit.setVisibility(View.VISIBLE);
+                    EmailEdit.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                     PhoneNoEdit.setVisibility(View.VISIBLE);
                     PhoneNoEdit.setHint("New Password");
-                    PhoneNoEdit.setInputType(NameEdit.getInputType());
+                    PhoneNoEdit.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    PhoneNoEdit.setTransformationMethod(new PasswordTransformationMethod());
+
                     //          PassEdit.setVisibility(View.GONE);
                     r1.setVisibility(View.VISIBLE);
                     r2.setVisibility(View.VISIBLE);

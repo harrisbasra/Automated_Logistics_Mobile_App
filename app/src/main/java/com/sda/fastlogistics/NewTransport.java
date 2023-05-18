@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.material.snackbar.Snackbar;
 import com.sda.fastlogistics.databinding.ActivityNewTransportBinding;
 
 /**
@@ -165,7 +166,8 @@ public class NewTransport extends AppCompatActivity {
         binding.button19.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!(binding.key2.getText().toString().equals("") && binding.key3.getText().toString().equals(""))){
+                if(!(binding.key2.getText().toString().equals("") || binding.key3.getText().toString().equals(""))){
+                    if(!(binding.key2.getText().toString().startsWith("-") || binding.key3.getText().toString().startsWith("-"))){
                     DriverDBHelper db2 = new DriverDBHelper(NewTransport.this);
                     String DriverBeingUsed = db2.getAvailableDriverName(binding.spinnerA.getSelectedItem().toString());
                     db2.incrementTripCount(DriverBeingUsed);
@@ -177,6 +179,10 @@ public class NewTransport extends AppCompatActivity {
                         throw new RuntimeException(e);
                     }
                     startActivity(new Intent(NewTransport.this, MainMenuuu.class));
+                    }
+                    else{
+                        Toast.makeText(NewTransport.this, "Nothing Can Be Negative", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else{
                     Toast.makeText(NewTransport.this, "Fill All Columns", Toast.LENGTH_SHORT).show();

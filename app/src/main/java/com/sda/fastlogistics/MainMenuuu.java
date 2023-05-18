@@ -124,6 +124,7 @@ public class MainMenuuu extends AppCompatActivity {
             if(temp.toString().equals("2" +
                     "")){
                 binding.button12.setEnabled(false);
+                binding.button11.setEnabled(false);
             }
             fin.close();
         }
@@ -293,6 +294,7 @@ public class MainMenuuu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MainMenuuu.this, FullscreenActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
             }
         });

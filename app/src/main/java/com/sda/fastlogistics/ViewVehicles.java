@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.MotionEvent;
@@ -27,6 +28,10 @@ import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.sda.fastlogistics.databinding.ActivityViewVehiclesBinding;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -161,6 +166,31 @@ public class ViewVehicles extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ViewVehicles.this, BuyCars.class));
+            }
+        });
+        String SEL = "";
+        for(int i=0;i<var.size();i++){
+            SEL += "\n" + var.get(i).toString();
+        }
+        String finalSEL = SEL;
+        binding.floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileOutputStream outputStream = null;
+                try {
+                    String fileName = "Fast Logistics Vehicles Report.txt";
+                    File documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+                    File file = new File(documentsDir, fileName);
+                    outputStream = new FileOutputStream(file);
+                    outputStream.write(finalSEL.getBytes());
+                    outputStream.close();
+                    Toast.makeText(ViewVehicles.this, "File has been exported to Documents as Fast Logistics Vehicles Report.txt", Toast.LENGTH_SHORT).show();
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
         });
     }

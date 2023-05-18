@@ -108,30 +108,47 @@ public class SendSalary extends AppCompatActivity {
         binding.button11.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri;
-                uri = new Uri.Builder()
-                        .scheme("upi")
-                        .authority("pay")
-                        .appendQueryParameter("pa", "BCR2DN4TXLUNTMKH")       // virtual ID
-                        .appendQueryParameter("pn", "HarrisBasra")          // name
-                        .appendQueryParameter("tn", "Hotolights")       // any note about payment
-                        .appendQueryParameter("am", String.valueOf("500"))           // amount
-                        .appendQueryParameter("cu", "PKR")                         // currency
-                        .build();
-                Intent upiPayIntent = new Intent(Intent.ACTION_VIEW);
-                upiPayIntent.setData(uri);
-// will always show a dialog to user to choose an app
-                Intent chooser = Intent.createChooser(upiPayIntent, "Pay with");
-// check if intent resolves
-                if(null != chooser.resolveActivity(getPackageManager())) {
-                    int UPI_PAYMENT = 0;
-                    startActivityForResult(chooser, UPI_PAYMENT);
-                } else {
-                    Toast.makeText(SendSalary.this,"No UPI app found, please install one to continue",Toast.LENGTH_SHORT).show();
+                if(!(binding.spinnerA.getText().toString().equals("")
+                        ||binding.spinnerA2.getText().toString().equals("")
+                        ||binding.spinnerA3.getText().toString().equals("")
+                        ||binding.cypher2.getText().toString().equals("")
+                        ||binding.cypher3.getText().toString().equals(""))) {
+
+                    if (!(binding.spinnerA.getText().toString().startsWith("-")
+                            || binding.spinnerA2.getText().toString().startsWith("-")
+                            || binding.spinnerA3.getText().toString().startsWith("-")
+                            || binding.cypher2.getText().toString().startsWith("-")
+                            || binding.cypher3.getText().toString().startsWith("-"))) {
+                        Uri uri;
+                        uri = new Uri.Builder()
+                                .scheme("upi")
+                                .authority("pay")
+                                .appendQueryParameter("pa", "BCR2DN4TXLUNTMKH")       // virtual ID
+                                .appendQueryParameter("pn", "HarrisBasra")          // name
+                                .appendQueryParameter("tn", "Hotolights")       // any note about payment
+                                .appendQueryParameter("am", "500")           // amount
+                                .appendQueryParameter("cu", "PKR")                         // currency
+                                .build();
+                        Intent upiPayIntent = new Intent(Intent.ACTION_VIEW);
+                        upiPayIntent.setData(uri);
+                        Intent chooser = Intent.createChooser(upiPayIntent, "Pay with");
+
+                        if (null != chooser.resolveActivity(getPackageManager())) {
+                            int UPI_PAYMENT = 0;
+                            startActivityForResult(chooser, UPI_PAYMENT);
+                        } else {
+                            Toast.makeText(SendSalary.this, "No UPI app found, please install one to continue", Toast.LENGTH_SHORT).show();
+                        }
+
+                        Toast.makeText(SendSalary.this, "Payment Successfully Transferred to Selected Application", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(SendSalary.this, "Nothing Can be Negative", Toast.LENGTH_SHORT).show();
+                    }
                 }
-
-                Toast.makeText(SendSalary.this, "Payment Successfully Transferred to Selected Application", Toast.LENGTH_SHORT).show();
-
+                else{
+                    Toast.makeText(SendSalary.this, "Empty Columns Found", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
